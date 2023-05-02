@@ -27,10 +27,11 @@ public class BlockHandler {
             return;
         }
 
-        var pattern = BlockPatternBuilder.start().aisle("^", "#", "@")
+        var pattern = BlockPatternBuilder.start().aisle("0^0", ".#.", "0#0")
                 .where('^', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.CARVED_PUMPKIN)))
                 .where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.COPPER_BLOCK)))
-                .where('@', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.COPPER_BLOCK)))
+                .where('.', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.IRON_BLOCK)))
+                .where('0', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.AIR)))
                 .build();
 
         var result = pattern.searchAround(world, pos);
