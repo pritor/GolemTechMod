@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "GolemTech",
-  "description": "Main idea of this mod is making a golem from different blocks with characteristics",
+  "description": "Main idea of this mod is making a custom golems from different blocks with different characteristics",
   "authors": [
     "Petr Podstavkin",
     "Vyacheslav Chelondaev"
@@ -21,7 +21,11 @@
   "entrypoints": {
     "main": [
       "org.sgx.golemtech.GolemTechMod"
+    ],
+    "client": [
+      "org.sgx.golemtech.GolemTechClient"
     ]
+
   },
   "mixins": [
     "golemtech.mixins.json"

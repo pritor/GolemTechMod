@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
 import org.jetbrains.annotations.Nullable;
+import org.sgx.golemtech.entity.CustomGolemEntity;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class BlockHandler {
@@ -44,16 +45,16 @@ public class BlockHandler {
                 }
             }
 
-//            BlockPos blockPos2 = result.translate(0, 2, 0).getBlockPos();
-//            CopperGolemEntity copperGolemEntity = ModInit.COPPER_GOLEM_ENTITY_TYPE.create(world);
-//            copperGolemEntity.refreshPositionAndAngles((double)blockPos2.getX() + 0.5D, (double)blockPos2.getY() + 0.05D, (double)blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
-//            world.spawnEntity(copperGolemEntity);
-//            var var6 = world.getNonSpectatingEntities(ServerPlayerEntity.class, copperGolemEntity.getBoundingBox().expand(5.0D)).iterator();
+            BlockPos blockPos2 = result.translate(0, 2, 0).getBlockPos();
+            CustomGolemEntity customGolemEntity = GolemTechMod.CUSTOM_GOLEM.create(world);
+            customGolemEntity.refreshPositionAndAngles((double)blockPos2.getX() + 0.5D, (double)blockPos2.getY() + 0.05D, (double)blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+            world.spawnEntity(customGolemEntity);
+            var var6 = world.getNonSpectatingEntities(ServerPlayerEntity.class, customGolemEntity.getBoundingBox().expand(5.0D)).iterator();
 //
-//            while(var6.hasNext()) {
-//                var serverPlayerEntity2 = (ServerPlayerEntity)var6.next();
-//                Criteria.SUMMONED_ENTITY.trigger(serverPlayerEntity2, copperGolemEntity);
-//            }
+            while(var6.hasNext()) {
+                var serverPlayerEntity2 = (ServerPlayerEntity)var6.next();
+                Criteria.SUMMONED_ENTITY.trigger(serverPlayerEntity2, customGolemEntity);
+            }
 
             for(var m = 0; m < pattern.getWidth(); ++m) {
                 for(int n = 0; n < pattern.getHeight(); ++n) {
