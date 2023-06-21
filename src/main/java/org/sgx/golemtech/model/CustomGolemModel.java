@@ -10,6 +10,7 @@ import org.sgx.golemtech.entity.CustomGolemEntity;
 public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEntityModel<T>{
     private final ModelPart base;
     private final ModelPart body;
+    private final ModelPart root;
     private final ModelPart head;
     private final ModelPart nose;
     private final ModelPart leftLeg;
@@ -21,6 +22,7 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
         base = modelPart;
 
         this.body = modelPart.getChild(EntityModelPartNames.BODY);
+        this.root = this.body.getChild(EntityModelPartNames.ROOT);
         this.head = this.body.getChild(EntityModelPartNames.HEAD);
         this.nose = this.head.getChild(EntityModelPartNames.NOSE);
         this.leftLeg = modelPart.getChild(EntityModelPartNames.LEFT_LEG);
@@ -45,35 +47,43 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
+        Dilation ex= new Dilation(0.5f);
 
         // Body has the limbs attached
         var body = modelPartData.addChild(EntityModelPartNames.BODY,
-                ModelPartBuilder.create().uv(0, 15).cuboid(-5, -6, -3, 10, 8, 6),
-                ModelTransform.pivot(0, 18, 0));
+                ModelPartBuilder.create().uv(0, 40).cuboid(-9, -6, -5, 18, 12, 11),
+                ModelTransform.pivot(0, -3, 0));
 
         body.addChild(EntityModelPartNames.LEFT_ARM,
-                ModelPartBuilder.create().uv(38, 25).cuboid(-2, 0, -2, 3, 9, 4),
-                ModelTransform.pivot(-6, -6, 0));
+                ModelPartBuilder.create().uv(60, 21).cuboid(-4, -0.5f, -2, 4, 30, 6),
+                ModelTransform.pivot(-9, -6, 0));
+
         body.addChild(EntityModelPartNames.RIGHT_ARM,
-                ModelPartBuilder.create().mirrored().uv(38, 25).cuboid(-1, 0, -2, 3, 9, 4),
-                ModelTransform.pivot(6, -6, 0));
+                ModelPartBuilder.create().uv(60, 58).cuboid(0, -0.5f, -2, 4, 30, 6),
+                ModelTransform.pivot(9, -6, 0));
+
+        body.addChild(EntityModelPartNames.ROOT,
+                ModelPartBuilder.create().uv(0,70).cuboid(-4.5f, 6f, -2, 9, 5, 6, ex , 1f, 1f),
+                ModelTransform.pivot(0, 0, 0));
+
+
 
         var head = body.addChild(EntityModelPartNames.HEAD,
-                ModelPartBuilder.create().uv(0, 0).cuboid(-5, -3, -4, 10, 6, 8),
-                ModelTransform.pivot(0, -9, 0));
+                ModelPartBuilder.create().uv(0, 0).cuboid(-4, -2, -4.5f, 8, 10, 8),
+                ModelTransform.pivot(0, -14, -2));
 
         head.addChild(EntityModelPartNames.NOSE,
-                ModelPartBuilder.create().uv(44, 5).cuboid(-1, 0, -1, 2, 4, 2),
+                ModelPartBuilder.create().uv(24, 0).cuboid(-1, 5, -1, 2, 4, 2),
                 ModelTransform.pivot(0, 0, -5));
 
         // Legs are not attached to the body, sounds like a horror movie
         modelPartData.addChild(EntityModelPartNames.LEFT_LEG,
-                ModelPartBuilder.create().mirrored().uv(0, 30).cuboid(-2, 0, -2, 4, 4, 4),
-                ModelTransform.pivot(-2, 20, 0));
+                ModelPartBuilder.create().uv(37, 0).cuboid(-3, 0, -2, 6, 16, 5),
+                ModelTransform.pivot(-4.5f, 8, 0));
         modelPartData.addChild(EntityModelPartNames.RIGHT_LEG,
-                ModelPartBuilder.create().uv(0, 30).cuboid(-2, 0, -2, 4, 4, 4),
-                ModelTransform.pivot(2, 20, 0));
+                ModelPartBuilder.create().uv(60, 0).cuboid(-3, 0, -2, 6, 16, 5),
+                ModelTransform.pivot(4.5f, 8, 0));
 
-        return TexturedModelData.of(modelData, 64, 64);
+        return TexturedModelData.of(modelData, 128, 128);
     }
 }

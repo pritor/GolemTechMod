@@ -45,7 +45,7 @@ public class BlockHandler {
                 }
             }
 
-            BlockPos blockPos2 = result.translate(0, 2, 0).getBlockPos();
+            BlockPos blockPos2 = result.translate(1, 2, 0).getBlockPos();
             CustomGolemEntity customGolemEntity = GolemTechMod.CUSTOM_GOLEM.create(world);
             customGolemEntity.refreshPositionAndAngles((double)blockPos2.getX() + 0.5D, (double)blockPos2.getY() + 0.05D, (double)blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
             world.spawnEntity(customGolemEntity);

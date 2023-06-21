@@ -8,8 +8,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.sgx.golemtech.entity.CustomGolemEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.sgx.golemtech.handler.BlockHandler;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -22,12 +22,12 @@ public class GolemTechMod implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final String MODID = "golemtech";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public static final EntityType<CustomGolemEntity> CUSTOM_GOLEM = Registry.register(
 			Registries.ENTITY_TYPE,
 			new Identifier("golemtech", "custom_golem"),
-			FabricEntityTypeBuilder.create(SpawnGroup.MISC, CustomGolemEntity::new).dimensions(EntityDimensions.fixed(1.5f, 3.0f)).build()
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, CustomGolemEntity::new).dimensions(EntityDimensions.fixed(1.4f, 2.7f)).build()
 	);
 
 	@Override
