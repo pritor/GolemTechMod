@@ -1,11 +1,14 @@
 package org.sgx.golemtech.model;
 
+
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.util.math.MathHelper;
 import org.sgx.golemtech.entity.CustomGolemEntity;
+
+
 
 public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEntityModel<T>{
     private final ModelPart base;
@@ -17,6 +20,7 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
     private final ModelPart rightLeg;
     private final ModelPart leftArm;
     private final ModelPart rightArm;
+
 
     public CustomGolemModel(ModelPart modelPart){
         base = modelPart;
@@ -54,11 +58,11 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
                 ModelPartBuilder.create().uv(0, 40).cuboid(-9, -6, -5, 18, 12, 11),
                 ModelTransform.pivot(0, -3, 0));
 
-        body.addChild(EntityModelPartNames.LEFT_ARM,
+        body.addChild(EntityModelPartNames.RIGHT_ARM,
                 ModelPartBuilder.create().uv(60, 21).cuboid(-4, -0.5f, -2, 4, 30, 6),
                 ModelTransform.pivot(-9, -6, 0));
 
-        body.addChild(EntityModelPartNames.RIGHT_ARM,
+        body.addChild(EntityModelPartNames.LEFT_ARM,
                 ModelPartBuilder.create().uv(60, 58).cuboid(0, -0.5f, -2, 4, 30, 6),
                 ModelTransform.pivot(9, -6, 0));
 
