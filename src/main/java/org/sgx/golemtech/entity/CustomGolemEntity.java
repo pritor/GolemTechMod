@@ -2,14 +2,22 @@ package org.sgx.golemtech.entity;
 
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.world.World;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
+
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 
 public class CustomGolemEntity extends IronGolemEntity {
 
@@ -17,6 +25,9 @@ public class CustomGolemEntity extends IronGolemEntity {
     protected static final TrackedData<Integer> R_ARM_MAT_ID;
     protected static final TrackedData<Integer> BODY_MAT_ID;
     protected static final TrackedData<Integer> LEGS_MAT_ID;
+    private static final Map<CustomGolemEntity.Material, Item> MAT_TO_ITEM;
+
+
 
 
     static{
@@ -24,6 +35,9 @@ public class CustomGolemEntity extends IronGolemEntity {
         R_ARM_MAT_ID = DataTracker.registerData(CustomGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
         BODY_MAT_ID = DataTracker.registerData(CustomGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
         LEGS_MAT_ID = DataTracker.registerData(CustomGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        MAT_TO_ITEM = ImmutableMap.of(Material.IRON, Items.IRON_INGOT,
+                                      Material.DIAMOND, Items.DIAMOND,
+                                      Material.GOLD, Items.GOLD_INGOT);
 
     }
     public CustomGolemEntity(EntityType<? extends IronGolemEntity> entityType, World world){
@@ -42,6 +56,23 @@ public class CustomGolemEntity extends IronGolemEntity {
     public static DefaultAttributeContainer.Builder createMobAttributes(){
         DefaultAttributeContainer.Builder temp = IronGolemEntity.createIronGolemAttributes();
         return temp;
+    }
+
+    @Override
+    protected void dropLoot(DamageSource source, boolean causedByPlayer) {
+        var pos = this.getBlockPos();
+        var l_arm_item = new ItemStack(MAT_TO_ITEM.get(this.getL_ARM_MAT()),1);
+        var l_arm_itemEntity = new ItemEntity(this.world, pos.getX(), pos.getY(), pos.getZ(), l_arm_item);
+        this.world.spawnEntity(l_arm_itemEntity);
+        var r_arm_item = new ItemStack(MAT_TO_ITEM.get(this.getR_ARM_MAT()),1);
+        var r_arm_itemEntity = new ItemEntity(this.world, pos.getX(), pos.getY(), pos.getZ(), r_arm_item);
+        this.world.spawnEntity(r_arm_itemEntity);
+        var body_item = new ItemStack(MAT_TO_ITEM.get(this.getBODY_MAT()),1);
+        var body_itemEntity = new ItemEntity(this.world, pos.getX(), pos.getY(), pos.getZ(), body_item);
+        this.world.spawnEntity(body_itemEntity);
+        var legs_item = new ItemStack(MAT_TO_ITEM.get(this.getLEGS_MAT()),1);
+        var legs_itemEntity = new ItemEntity(this.world, pos.getX(), pos.getY(), pos.getZ(), legs_item);
+        this.world.spawnEntity(legs_itemEntity);
     }
 
     public Integer getL_ARM_MAT_ID(){
