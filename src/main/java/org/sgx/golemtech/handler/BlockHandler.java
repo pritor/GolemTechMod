@@ -112,7 +112,8 @@ public class BlockHandler {
             customGolemEntity.setR_ARM_MAT(R_ARM_TO_MAT.get(r_arm));
             customGolemEntity.setBODY_MAT(BODY_TO_MAT.get(body));
             customGolemEntity.setLEGS_MAT(LEGS_TO_MAT.get(legs));
-            customGolemEntity.setMovementSpeed(legs*50f);
+
+            customGolemEntity.recountAttributes();
 
             customGolemEntity.refreshPositionAndAngles((double)blockPos2.getX() + 0.5D, (double)blockPos2.getY() + 0.05D, (double)blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
             world.spawnEntity(customGolemEntity);

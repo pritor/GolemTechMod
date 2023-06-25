@@ -1,11 +1,15 @@
 package org.sgx.golemtech.entity;
 
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +23,7 @@ import net.minecraft.nbt.NbtCompound;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
+
 public class CustomGolemEntity extends IronGolemEntity {
 
     protected static final TrackedData<Integer> L_ARM_MAT_ID;
@@ -27,7 +32,17 @@ public class CustomGolemEntity extends IronGolemEntity {
     protected static final TrackedData<Integer> LEGS_MAT_ID;
     private static final Map<CustomGolemEntity.Material, Item> MAT_TO_ITEM;
 
+    private static final Map<CustomGolemEntity.Material, Float> ARM_MAT_TO_HEALTH;
+    private static final Map<CustomGolemEntity.Material, Float> BODY_MAT_TO_HEALTH;
+    private static final Map<CustomGolemEntity.Material, Float> LEGS_MAT_TO_HEALTH;
 
+    private static final Map<CustomGolemEntity.Material, Float> ARM_MAT_TO_SPEED;
+    private static final Map<CustomGolemEntity.Material, Float> BODY_MAT_TO_SPEED;
+    private static final Map<CustomGolemEntity.Material, Float> LEGS_MAT_TO_SPEED;
+
+    private static final Map<CustomGolemEntity.Material, Float> ARM_MAT_TO_ATTACK;
+    private static final Map<CustomGolemEntity.Material, Float> BODY_MAT_TO_ATTACK;
+    private static final Map<CustomGolemEntity.Material, Float> LEGS_MAT_TO_ATTACK;
 
 
     static{
@@ -38,6 +53,35 @@ public class CustomGolemEntity extends IronGolemEntity {
         MAT_TO_ITEM = ImmutableMap.of(Material.IRON, Items.IRON_INGOT,
                                       Material.DIAMOND, Items.DIAMOND,
                                       Material.GOLD, Items.GOLD_INGOT);
+        ARM_MAT_TO_HEALTH = ImmutableMap.of(Material.IRON, 0.15f,
+                                            Material.DIAMOND, 0.3f,
+                                            Material.GOLD, 0.075f);
+        LEGS_MAT_TO_HEALTH = ImmutableMap.of(Material.IRON, 0.2f,
+                Material.DIAMOND, 0.4f,
+                Material.GOLD, 0.1f);
+        BODY_MAT_TO_HEALTH = ImmutableMap.of(Material.IRON, 0.5f,
+                                            Material.DIAMOND, 1.0f,
+                                            Material.GOLD, 0.25f);
+
+        ARM_MAT_TO_SPEED = ImmutableMap.of(Material.IRON, 0.08f,
+                Material.DIAMOND, 0.16f,
+                Material.GOLD, 0.16f);
+        LEGS_MAT_TO_SPEED = ImmutableMap.of(Material.IRON, 0.6f,
+                Material.DIAMOND, 1.2f,
+                Material.GOLD, 1.2f);
+        BODY_MAT_TO_SPEED = ImmutableMap.of(Material.IRON, 0.24f,
+                Material.DIAMOND, 0.48f,
+                Material.GOLD, 0.48f);
+
+        ARM_MAT_TO_ATTACK = ImmutableMap.of(Material.IRON, 0.33f,
+                Material.DIAMOND, 0.66f,
+                Material.GOLD, 0.66f);
+        LEGS_MAT_TO_ATTACK = ImmutableMap.of(Material.IRON, 0.14f,
+                Material.DIAMOND, 0.28f,
+                Material.GOLD, 0.28f);
+        BODY_MAT_TO_ATTACK = ImmutableMap.of(Material.IRON, 0.2f,
+                Material.DIAMOND, 0.4f,
+                Material.GOLD, 0.4f);
 
     }
     public CustomGolemEntity(EntityType<? extends IronGolemEntity> entityType, World world){
@@ -54,11 +98,9 @@ public class CustomGolemEntity extends IronGolemEntity {
 
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes(){
-        DefaultAttributeContainer.Builder temp = IronGolemEntity.createIronGolemAttributes();
-        return temp;
+    public static DefaultAttributeContainer.Builder createMobAttributes() {
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0);
     }
-
     @Override
     protected void dropLoot(DamageSource source, boolean causedByPlayer) {
         var pos = this.getBlockPos();
@@ -88,6 +130,19 @@ public class CustomGolemEntity extends IronGolemEntity {
         return Material.GOLD;
     }
 
+    public void recountAttributes(){
+        var health = ARM_MAT_TO_HEALTH.get(this.getL_ARM_MAT()) + ARM_MAT_TO_HEALTH.get(this.getR_ARM_MAT())
+                + BODY_MAT_TO_HEALTH.get(this.getBODY_MAT()) + LEGS_MAT_TO_HEALTH.get(this.getLEGS_MAT());
+        var speed = ARM_MAT_TO_SPEED.get(this.getL_ARM_MAT()) + ARM_MAT_TO_SPEED.get(this.getR_ARM_MAT())
+                + BODY_MAT_TO_SPEED.get(this.getBODY_MAT()) + LEGS_MAT_TO_SPEED.get(this.getLEGS_MAT());
+        var attack = ARM_MAT_TO_ATTACK.get(this.getL_ARM_MAT()) + ARM_MAT_TO_ATTACK.get(this.getR_ARM_MAT())
+                + BODY_MAT_TO_ATTACK.get(this.getBODY_MAT()) + LEGS_MAT_TO_ATTACK.get(this.getLEGS_MAT());
+        Multimap<EntityAttribute, EntityAttributeModifier> mods = ArrayListMultimap.create();
+        mods.put(EntityAttributes.GENERIC_MAX_HEALTH, new EntityAttributeModifier("Health", health, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+        mods.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new  EntityAttributeModifier("Speed", speed, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+        mods.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier("Attack_damage", attack, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+        this.getAttributes().addTemporaryModifiers(mods);
+    }
     public void setL_ARM_MAT(Material new_mat){
         if (new_mat==Material.IRON)
             this.dataTracker.set(L_ARM_MAT_ID, 0);
@@ -173,6 +228,7 @@ public class CustomGolemEntity extends IronGolemEntity {
         this.dataTracker.set(R_ARM_MAT_ID, nbt.getInt("R_arm_mat"));
         this.dataTracker.set(BODY_MAT_ID, nbt.getInt("Body_mat"));
         this.dataTracker.set(LEGS_MAT_ID, nbt.getInt("Legs_mat"));
+        recountAttributes();
     }
     public enum Material{
         IRON,
