@@ -53,6 +53,7 @@ public class CustomGolemEntity extends IronGolemEntity {
         this.dataTracker.startTracking(LEGS_MAT_ID, 0);
 
     }
+
     public static DefaultAttributeContainer.Builder createMobAttributes(){
         DefaultAttributeContainer.Builder temp = IronGolemEntity.createIronGolemAttributes();
         return temp;

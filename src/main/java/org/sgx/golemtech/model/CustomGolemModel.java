@@ -41,8 +41,11 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
     @Override
     public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
         this.head.pitch = headPitch * 0.017453292F;
+        this.base.roll = 0.5F * MathHelper.wrap(limbAngle, 13.0F) * limbDistance;
         this.rightLeg.pitch = -1.5F * MathHelper.wrap(limbAngle, 13.0F) * limbDistance;
         this.leftLeg.pitch = 1.5F * MathHelper.wrap(limbAngle, 13.0F) * limbDistance;
+        this.rightArm.pitch = -1.5F * MathHelper.wrap(limbAngle, 13.0F) * limbDistance;
+        this.leftArm.pitch = 1.5F * MathHelper.wrap(limbAngle, 13.0F) * limbDistance;
         this.rightLeg.yaw = 0.0F;
         this.leftLeg.yaw = 0.0F;
 
@@ -73,12 +76,12 @@ public class CustomGolemModel<T extends CustomGolemEntity> extends SinglePartEnt
 
 
         var head = body.addChild(EntityModelPartNames.HEAD,
-                ModelPartBuilder.create().uv(0, 0).cuboid(-4, -2, -4.5f, 8, 10, 8),
-                ModelTransform.pivot(0, -14, -2));
+                ModelPartBuilder.create().uv(0, 0).cuboid(-4, -7, -6.5f, 8, 10, 8),
+                ModelTransform.pivot(0, -9, 0));
 
         head.addChild(EntityModelPartNames.NOSE,
                 ModelPartBuilder.create().uv(24, 0).cuboid(-1, 5, -1, 2, 4, 2),
-                ModelTransform.pivot(0, 0, -5));
+                ModelTransform.pivot(0, -4, -7.5f));
 
         // Legs are not attached to the body, sounds like a horror movie
         modelPartData.addChild(EntityModelPartNames.LEFT_LEG,
